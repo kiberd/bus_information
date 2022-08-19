@@ -38,4 +38,45 @@ export const getCtyCodeList = async (
   
     return data.response.body;
   };
+
+
+
+  export const getSttnAcctoArvlPrearngeInfoList = async (
+    nodeId: string,
+    cityCode: number
+  ) => {
+    const { data } = await axios.get(
+      // `http://apis.data.go.kr/1613000/BusSttnInfoInqireService/getCrdntPrxmtSttnList`,
+      `/1613000/ArvlInfoInqireService/getSttnAcctoArvlPrearngeInfoList`,
+      {
+        params: {
+          serviceKey: process.env.REACT_APP_SERVICE_KEY,
+          pageNo: 1,
+          numOfRows: 100,
+          _type: "json",
+          nodeId: nodeId,
+          cityCode: cityCode,
+        },
+      }
+    );
+  
+    return data.response.body;
+  };
+  
+  export const getInfoCtyCodeList = async (
+      
+    ) => {
+      const { data } = await axios.get(
+      
+        `/1613000/ArvlInfoInqireService/getCtyCodeList`,
+        {
+          params: {
+            serviceKey: process.env.REACT_APP_SERVICE_KEY,
+            _type: "json",
+          },
+        }
+      );
+    
+      return data.response.body;
+    };
   

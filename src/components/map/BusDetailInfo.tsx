@@ -1,76 +1,90 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { RefreshIcon } from "@heroicons/react/outline";
 
+import { useRecoilState } from "recoil";
+import { targetBusDataState } from "../../atoms/data";
+
+import { useQuery } from "react-query";
+import { getSttnAcctoArvlPrearngeInfoList } from "../../api/api";
+
+import BusArrivalInfo from "./BusArrivalInfo";
+
 const BusDetailInfo = () => {
+  const [targetBusData, setTargetBusData] = useRecoilState(targetBusDataState);
+
+  const {
+    data: arvlPrearngeData,
+    isLoading: isArvlPrearngeLoading,
+    isError: isArvlPrearngeError,
+    isFetching: isArvlPrearngeFetching,
+    refetch: refetchAcctoArvlPrearngeInfoList,
+  } = useQuery(
+    "getSttnAcctoArvlPrearngeInfoList",
+    () =>
+      getSttnAcctoArvlPrearngeInfoList(
+        targetBusData.nodeId,
+        targetBusData.cityCode
+      ),
+    {
+      enabled: false,
+    }
+  );
+
+  useEffect(() => {
+    if (targetBusData) refetchAcctoArvlPrearngeInfoList();
+
+    // console.log(targetBusData);
+  }, [targetBusData]);
+
+  useEffect(() => {
+    console.log(arvlPrearngeData);
+  }, [arvlPrearngeData]);
+
+  // useEffect(() => {
+  //   console.log(targetBusData);
+  // }, [targetBusData])
+
+  if (isArvlPrearngeFetching)
+    return (
+      <div className="flex items-center justify-center h-[90vh]">
+        <div className="w-16 h-16 border-b-4 border-gray-900 rounded-full animate-spin"></div>
+      </div>
+    );
+
+  if (isArvlPrearngeError)
+    return (
+      <div className="flex items-center justify-center h-[90vh]">
+        <div>노선 정보를 불러올 수 없습니다.</div>
+      </div>
+    );
+
   return (
     <div>
       {/* Header */}
-      <div className="flex justify-between w-full min-h-[4vh] px-10 mt-5 mb-7">
+      <div className="flex-col w-full px-10 mb-4">
         <div className="flex items-start">
-          <h2 className=" text-xl font-bold">군자역</h2>
+          <h2 className="text-xl font-bold">
+            {targetBusData.nodeNm} ({targetBusData.nodeId})
+          </h2>
         </div>
 
-        <div className="flex items-end">
+        <div className="flex items-center justify-end">
           <span className="text-gray-500 text-sm">17:05 기준 </span>
-          <RefreshIcon className="w-5 h-5 ml-4" />
+          <RefreshIcon className="w-5 h-5 ml-4 cursor-pointer" onClick={() => refetchAcctoArvlPrearngeInfoList()} />
         </div>
       </div>
 
-
-
-
-
-
-      {/* Contents */}
-      <div className="flex justify-between ml-5 border-y border-gray-200 py-6 px-6">
-        <div className="flex">
-          {/* Logo */}
-          <img src={process.env.PUBLIC_URL + "/bus.png"} className="w-8 h-8 mt-2" />
-
-          {/* Info */}
-          <div className="ml-4">
-            <div className="text-lg">604</div>
-            <div className="text-sm"><span className="text-red-600">6분</span> 4정류장</div>
-          </div>
+      {arvlPrearngeData && arvlPrearngeData.totalCount === 0 ? (
+        <div className="flex items-center justify-center h-[90vh]">
+          <div>도착 예정 버스가 없습니다.</div>
         </div>
+      ) : null}
 
-        <div className="text-gray-400 text-xs">군자역  성수역</div>
-      </div>
-
-
-
-      <div className="flex justify-between ml-5 border-y border-gray-200 py-6 px-6">
-        <div className="flex">
-          {/* Logo */}
-          <img src={process.env.PUBLIC_URL + "/bus.png"} className="w-8 h-8 mt-2" />
-
-          {/* Info */}
-          <div className="ml-4">
-            <div className="text-lg">604</div>
-            <div className="text-sm"><span className="text-red-600">6분</span> 4정류장</div>
-          </div>
-        </div>
-
-        <div className="text-gray-400 text-xs">군자역  성수역</div>
-      </div>
-
-      <div className="flex justify-between ml-5 border-y border-gray-200 py-6 px-6">
-        <div className="flex">
-          {/* Logo */}
-          <img src={process.env.PUBLIC_URL + "/bus.png"} className="w-8 h-8 mt-2" />
-
-          {/* Info */}
-          <div className="ml-4">
-            <div className="text-lg">604</div>
-            <div className="text-sm"><span className="text-red-600">6분</span> 4정류장</div>
-          </div>
-        </div>
-
-        <div className="text-gray-400 text-xs">군자역  성수역</div>
-      </div>
-
-
+      {arvlPrearngeData &&
+        arvlPrearngeData.items?.item?.map((arvlInfo: any) => (
+          <BusArrivalInfo arvlInfo={arvlInfo} />
+        ))}
     </div>
   );
 };
