@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 
 import { useQuery } from "react-query";
 
-import { getCrdntPrxmtSttnList } from "../../api/api";
+import { getCrdntPrxmtSttnList} from "../../api/api";
 
 
 
@@ -11,74 +11,88 @@ const BusMap = () => {
   const mapRef: any = useRef();
   const [info, setInfo] = useState<any>();
 
+  const [marker, setMarker] = useState<any>();
+  const [sttnList, setSttnList] = useState<any[]>([]);
 
   const {
-		data: sttnData,
+    data: sttnData,
+    isLoading: sttnLoading,
+    isError: sttnError,
+    isFetching: sttnFetching,
     refetch: refetchCrdntPrxmtSttnList,
-	} = useQuery("getCrdntPrxmtSttnList", () => getCrdntPrxmtSttnList(info.center.lat, info.center.lng), {
-		enabled: false,
-	});
+  } = useQuery(
+    "getCrdntPrxmtSttnList",
+    () => getCrdntPrxmtSttnList(marker.lat, marker.lng),
+    {
+      enabled: false,
+    }
+  );
 
   useEffect(() => {
-    if (info) refetchCrdntPrxmtSttnList();
-  } ,[info]);
+    setMarker({
+      level: 3,
+      lat: 37.67076,
+      lng: 126.760211,
+    })
+  } ,[])
 
   useEffect(() => {
-    console.log(sttnData);
-  } ,[sttnData])
+    if (marker && !sttnFetching) refetchCrdntPrxmtSttnList();
+  }, [marker]);
 
-
+  useEffect(() => {
+    if (sttnData) setSttnList([...sttnData.items.item]);
+  }, [sttnData]);
 
   return (
     <div>
       <Map
-        center={{ lat: 37.531, lng: 126.986 }}
-        style={{ width: "100%", height: "calc(100vh - 90px)"}}
-        // style={{ width: "100%", height: "500px" }}
+        center={{ lat: 37.67076, lng: 126.760211 }}
+        style={{ width: "100%", height: "calc(100vh - 90px)" }}
+        level={3} // 지도의 확대 레벨
+        onDragEnd={(map) =>
+          setMarker({
+            level: map.getLevel(),
+            lat: map.getCenter().getLat(),
+            lng: map.getCenter().getLng(),
+          })
+        }
+        onZoomChanged={(map) => setMarker({ ...marker, level: map.getLevel() })}
         ref={mapRef}
       >
-        <MapMarker position={{ lat: 37.531, lng: 126.986 }}>
-          {/* <div style={{ color: "#000" }}>Hello World!</div> */}
-        </MapMarker>
-      </Map>
+        {marker ? (
+          sttnFetching ? (
+            <CustomOverlayMap position={{ lat: marker.lat, lng: marker.lng }}>
+              <div className="flex items-center justify-center ">
+                <div className="w-16 h-16 border-b-4 border-gray-900 rounded-full animate-spin"></div>
+              </div>
+            </CustomOverlayMap>
+          ) : (
+            <MapMarker position={{ lat: marker.lat, lng: marker.lng }} />
+          )
+        ) : null}
 
-      {/* <button
-        onClick={() => {
-          const map = mapRef.current;
-          setInfo({
-            center: {
-              lat: map.getCenter().getLat(),
-              lng: map.getCenter().getLng(),
-            },
-            level: map.getLevel(),
-            typeId: map.getMapTypeId(),
-            swLatLng: {
-              lat: map.getBounds().getSouthWest().getLat(),
-              lng: map.getBounds().getSouthWest().getLng(),
-            },
-            neLatLng: {
-              lat: map.getBounds().getNorthEast().getLat(),
-              lng: map.getBounds().getNorthEast().getLng(),
-            },
-          });
-        }}
-      >
-        정보 가져 오기!
-      </button>
-      {info && (
-        <div>
-          <p>위도 : {info.center.lat}</p>
-          <p>경도 : {info.center.lng}</p>
-          <p>레벨 : {info.level}</p>
-          <p>타입 : {info.typeId}</p>
-          <p>
-            남서쪽 좌표 : {info.swLatLng.lat}, {info.swLatLng.lng}
-          </p>
-          <p>
-            북동쪽 좌표 : {info.neLatLng.lat}, {info.neLatLng.lng}
-          </p>
-        </div>
-      )} */}
+        {sttnList &&
+          marker?.level < 4 &&
+          sttnList.map((sttn, index) => (
+            <CustomOverlayMap
+              key={index}
+              position={{ lat: sttn.gpslati, lng: sttn.gpslong }}
+            >
+              <div className="p-2 bg-slate-300 border-gray-400 rounded-md flex justify-around items-center w-[120px]">
+                <img
+                  src={process.env.PUBLIC_URL + "/bus.png"}
+                  className="w-4 h-4"
+                />
+
+                <div className="text-xs text-ellipsis overflow-hidden">
+                  {sttn.nodenm}
+                </div>
+              </div>
+            </CustomOverlayMap>
+          ))}
+      </Map>
+      
     </div>
   );
 };

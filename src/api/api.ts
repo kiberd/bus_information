@@ -11,7 +11,7 @@ export const getCrdntPrxmtSttnList = async (
       params: {
         serviceKey: process.env.REACT_APP_SERVICE_KEY,
         pageNo: 1,
-        numOfRows: 10,
+        numOfRows: 100,
         _type: "json",
         gpsLati: gpsLati,
         gpsLong: gpsLong,
@@ -21,3 +21,21 @@ export const getCrdntPrxmtSttnList = async (
 
   return data.response.body;
 };
+
+export const getCtyCodeList = async (
+    
+  ) => {
+    const { data } = await axios.get(
+    
+      `/1613000/BusSttnInfoInqireService/getCtyCodeList`,
+      {
+        params: {
+          serviceKey: process.env.REACT_APP_SERVICE_KEY,
+          _type: "json",
+        },
+      }
+    );
+  
+    return data.response.body;
+  };
+  

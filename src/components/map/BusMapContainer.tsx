@@ -3,7 +3,7 @@ import BusMap from './BusMap';
 
 const BusMapContainer = () => {
     return (
-        <div className="w-[70%] bg-orange-700">
+        <div className="w-[70%]">
             <BusMap/>
         </div>
     );
