@@ -12,6 +12,7 @@ const BusMap = () => {
   const [targetBusData, setTargetBusData] = useRecoilState(targetBusDataState);
 
   const mapRef: any = useRef();
+  const [level, setLevel] = useState<any>(3);
   const [marker, setMarker] = useState<any>();
   const [sttnList, setSttnList] = useState<any[]>([]);
 
@@ -39,10 +40,17 @@ const BusMap = () => {
 
   useEffect(() => {
     if (marker && !isSttnFetching) {
-      refetchCrdntPrxmtSttnList();
-      setTargetBusData({...targetBusData, isSttnFetching: true});
+      // refetchCrdntPrxmtSttnList();
+      // setTargetBusData({...targetBusData, isSttnFetching: true});
     }
   }, [marker]);
+
+  const handleMarkerClick = () => {
+    if (marker && !isSttnFetching) {
+      refetchCrdntPrxmtSttnList();
+      setTargetBusData({...targetBusData, isSttnFetching: true, isList: true});
+    }
+  }
 
   useEffect(() => {
     if (sttnData) {
@@ -82,13 +90,14 @@ const BusMap = () => {
             lng: map.getCenter().getLng(),
           });
 
-          setTargetBusData({ ...targetBusData, isList: true});
+          // setTargetBusData({ ...targetBusData, isList: true});
         }}
         onDragStart={(map) => setSttnList([])}
-        // onZoomChanged={(map) => {
-        //   setMarker({ ...marker, level: map.getLevel() });
-        //   setTargetBusData({ ...targetBusData, isList: true});
-        // }}
+        onZoomChanged={(map) => {
+          // setMarker({ ...marker, level: map.getLevel() });
+          // setTargetBusData({ ...targetBusData, isList: true});
+          setLevel(map.getLevel());
+        }}
         ref={mapRef}
       >
         {marker ? (
@@ -99,12 +108,14 @@ const BusMap = () => {
               </div>
             </CustomOverlayMap>
           ) : (
-            <MapMarker position={{ lat: marker.lat, lng: marker.lng }} />
+            <>
+              <MapMarker position={{ lat: marker.lat, lng: marker.lng }} onClick={handleMarkerClick} />
+            </>
           )
         ) : null}
 
-        {sttnList &&
-          marker?.level < 4 &&
+        {sttnList && level &&
+          level < 4 &&
           sttnList.map((sttn, index) => (
             <CustomOverlayMap
               key={index}
@@ -133,6 +144,8 @@ const BusMap = () => {
             </CustomOverlayMap>
           ))}
       </Map>
+
+      <div className="fixed top-24 z-10 left-5 bg-slate-100 border rounded-md p-3 text-sm">검색하시려면 가운데 마커를 클릭 해주세요. (반경 500m 검색)</div>
     </div>
   );
 };
