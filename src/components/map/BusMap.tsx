@@ -84,10 +84,11 @@ const BusMap = () => {
 
           setTargetBusData({ ...targetBusData, isList: true});
         }}
-        onZoomChanged={(map) => {
-          setMarker({ ...marker, level: map.getLevel() });
-          setTargetBusData({ ...targetBusData, isList: true});
-        }}
+        onDragStart={(map) => setSttnList([])}
+        // onZoomChanged={(map) => {
+        //   setMarker({ ...marker, level: map.getLevel() });
+        //   setTargetBusData({ ...targetBusData, isList: true});
+        // }}
         ref={mapRef}
       >
         {marker ? (

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { RefreshIcon } from "@heroicons/react/outline";
 
@@ -10,8 +10,14 @@ import { getSttnAcctoArvlPrearngeInfoList } from "../../api/api";
 
 import BusArrivalInfo from "./BusArrivalInfo";
 
+import { BusArrivalInfoType } from "../../types/businfo";
+
+import moment from "moment";
+
 const BusDetailInfo = () => {
   const [targetBusData, setTargetBusData] = useRecoilState(targetBusDataState);
+  const [filterArvlPrearngeData, setFilterArvlPrearngeData] =
+    useState<BusArrivalInfoType[]>();
 
   const {
     data: arvlPrearngeData,
@@ -33,17 +39,25 @@ const BusDetailInfo = () => {
 
   useEffect(() => {
     if (targetBusData) refetchAcctoArvlPrearngeInfoList();
-
-    // console.log(targetBusData);
   }, [targetBusData]);
 
   useEffect(() => {
-    console.log(arvlPrearngeData);
+    if (arvlPrearngeData) {
+      const initArry: BusArrivalInfoType[] = [];
+
+      const filterArvlPrearngeData: BusArrivalInfoType[] =
+        arvlPrearngeData?.items?.item?.reduce(
+          (acc: any, obj: any) =>
+            acc.some((ele: any) => ele.routeno === obj.routeno)
+              ? acc
+              : [...acc, obj],
+          initArry
+        );
+
+      setFilterArvlPrearngeData(filterArvlPrearngeData);
+    }
   }, [arvlPrearngeData]);
 
-  // useEffect(() => {
-  //   console.log(targetBusData);
-  // }, [targetBusData])
 
   if (isArvlPrearngeFetching)
     return (
@@ -70,8 +84,13 @@ const BusDetailInfo = () => {
         </div>
 
         <div className="flex items-center justify-end">
-          <span className="text-gray-500 text-sm">17:05 기준 </span>
-          <RefreshIcon className="w-5 h-5 ml-4 cursor-pointer" onClick={() => refetchAcctoArvlPrearngeInfoList()} />
+          <span className="text-gray-500 text-sm">
+            {moment().format("h:mm")} 기준
+          </span>
+          <RefreshIcon
+            className="w-5 h-5 ml-4 cursor-pointer"
+            onClick={() => refetchAcctoArvlPrearngeInfoList()}
+          />
         </div>
       </div>
 
@@ -81,8 +100,8 @@ const BusDetailInfo = () => {
         </div>
       ) : null}
 
-      {arvlPrearngeData &&
-        arvlPrearngeData.items?.item?.map((arvlInfo: any) => (
+      {filterArvlPrearngeData &&
+        filterArvlPrearngeData.map((arvlInfo: any) => (
           <BusArrivalInfo arvlInfo={arvlInfo} />
         ))}
     </div>

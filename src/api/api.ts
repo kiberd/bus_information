@@ -6,7 +6,7 @@ export const getCrdntPrxmtSttnList = async (
 ) => {
   const { data } = await axios.get(
     // `http://apis.data.go.kr/1613000/BusSttnInfoInqireService/getCrdntPrxmtSttnList`,
-    `/1613000/BusSttnInfoInqireService/getCrdntPrxmtSttnList`,
+    process.env.REACT_APP_END_POINT + `/1613000/BusSttnInfoInqireService/getCrdntPrxmtSttnList`,
     {
       params: {
         serviceKey: process.env.REACT_APP_SERVICE_KEY,
@@ -26,8 +26,7 @@ export const getCtyCodeList = async (
     
   ) => {
     const { data } = await axios.get(
-    
-      `/1613000/BusSttnInfoInqireService/getCtyCodeList`,
+      process.env.REACT_APP_END_POINT + `/1613000/BusSttnInfoInqireService/getCtyCodeList`,
       {
         params: {
           serviceKey: process.env.REACT_APP_SERVICE_KEY,
@@ -47,7 +46,7 @@ export const getCtyCodeList = async (
   ) => {
     const { data } = await axios.get(
       // `http://apis.data.go.kr/1613000/BusSttnInfoInqireService/getCrdntPrxmtSttnList`,
-      `/1613000/ArvlInfoInqireService/getSttnAcctoArvlPrearngeInfoList`,
+      process.env.REACT_APP_END_POINT + `/1613000/ArvlInfoInqireService/getSttnAcctoArvlPrearngeInfoList`,
       {
         params: {
           serviceKey: process.env.REACT_APP_SERVICE_KEY,
@@ -68,7 +67,7 @@ export const getCtyCodeList = async (
     ) => {
       const { data } = await axios.get(
       
-        `/1613000/ArvlInfoInqireService/getCtyCodeList`,
+        process.env.REACT_APP_END_POINT + `/1613000/ArvlInfoInqireService/getCtyCodeList`,
         {
           params: {
             serviceKey: process.env.REACT_APP_SERVICE_KEY,

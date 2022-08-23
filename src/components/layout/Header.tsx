@@ -17,9 +17,8 @@ const Header = () => {
           <h3 className="ml-5">Bus Information</h3>
         </div>
 
-        <nav>
+        {/* <nav>
           <ul className="flex ml-6">
-            {/* <li className="ml-6 border-b border-gray-700 text-black"> */}
             <li className={ isMap ? `ml-6 transition duration-700 border-b border-gray-700 text-black` : `ml-6`} onClick={() => setIsMap(true)}>
               <Link to={"/"}>지도로 보기</Link>
             </li>
@@ -27,7 +26,8 @@ const Header = () => {
               <Link to={"/list"}>목록으로 보기</Link>
             </li>
           </ul>
-        </nav>
+        </nav> */}
+
       </div>
 
       {/* <div className="flex items-center justify-center w-[30%] h-full bg-green-400">
