@@ -10,30 +10,15 @@ import { targetBusDataState } from "../../atoms/data";
 const BusListContainer = () => {
   const [targetBusData, setTargetBusData] = useRecoilState(targetBusDataState);
 
-  // useEffect(() => {
-  //   console.log(targetBusData);
-  // }, [targetBusData]);
-
-  // if (targetBusData.isSttnFetching) return (
-  //   <div className="flex justify-center items-center">
-  //     <div className="w-16 h-16 border-b-4 border-gray-900 rounded-full animate-spin"></div>
-  //   </div>
-
-  // )
-
-  // useEffect(() => {
-  //   console.log(targetBusData);
-  // } ,[targetBusData])
-
-  // if (targetBusData.isSttnFetching)
-  //   return (
-  //     <div className="flex items-center">
-  //       <div className="w-16 h-16 border-b-4 border-gray-900 rounded-full animate-spin"></div>
-  //     </div>
-  //   );
+  if (!targetBusData.isSttnFetching && targetBusData.sttnList.length === 0)
+    return (
+      <div className="items-center justify-center hidden ml-40 md:flex">
+        <div>버스 정류장 정보가 없습니다.</div>
+      </div>
+    );
 
   return (
-    <div className="w-[30%] ml-2 border-l border-gray-300 h-[90vh] overflow-auto">
+    <div className="hidden md:block w-[30%] ml-2 border-l mt-2  border-gray-300 h-[90vh] overflow-auto">
       {targetBusData.isList ? (
         targetBusData.isSttnFetching ? (
           <div className="flex items-center justify-center h-[90vh]">
@@ -60,10 +45,10 @@ const BusListContainer = () => {
         )
       ) : (
         <div>
-          <ArrowLeftIcon
-            className="w-5 h-5 ml-4 mt-4 mb-4 cursor-pointer"
+          {/* <ArrowLeftIcon
+            className="w-5 h-5 mt-4 mb-4 ml-4 cursor-pointer"
             onClick={() => setTargetBusData({ ...targetBusData, isList: true })}
-          />
+          /> */}
           <BusDetailInfo />
         </div>
       )}

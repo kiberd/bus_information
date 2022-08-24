@@ -5,7 +5,7 @@ import BusListContainer from './BusListContainer';
 
 const MapContainer = () => {
     return (
-        <div className="flex p-2">
+        <div className="flex flex-col p-2 md:flex-row">
             <BusMapContainer/>
             <BusListContainer/>
         </div>

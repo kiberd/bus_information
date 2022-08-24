@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { RefreshIcon } from "@heroicons/react/outline";
+import { RefreshIcon, ArrowLeftIcon } from "@heroicons/react/outline";
 
 import { useRecoilState } from "recoil";
 import { targetBusDataState } from "../../atoms/data";
@@ -58,17 +58,16 @@ const BusDetailInfo = () => {
     }
   }, [arvlPrearngeData]);
 
-
   if (isArvlPrearngeFetching)
     return (
-      <div className="flex items-center justify-center h-[90vh]">
+      <div className="flex items-center justify-center h-full md:h-[90vh]">
         <div className="w-16 h-16 border-b-4 border-gray-900 rounded-full animate-spin"></div>
       </div>
     );
 
   if (isArvlPrearngeError)
     return (
-      <div className="flex items-center justify-center h-[90vh]">
+      <div className="flex items-center justify-center h-full md:h-[90vh]">
         <div>노선 정보를 불러올 수 없습니다.</div>
       </div>
     );
@@ -76,34 +75,42 @@ const BusDetailInfo = () => {
   return (
     <div>
       {/* Header */}
-      <div className="flex-col w-full px-10 mb-4">
+      <div className="sticky top-0 left-0 flex-col px-10 py-2 bg-white">
+        <ArrowLeftIcon
+          className="hidden w-4 h-4 mb-3 cursor-pointer md:block"
+          onClick={() => setTargetBusData({ ...targetBusData, isList: true })}
+        />
+
         <div className="flex items-start">
           <h2 className="text-xl font-bold">
             {targetBusData.nodeNm} ({targetBusData.nodeId})
           </h2>
         </div>
 
-        <div className="flex items-center justify-end">
-          <span className="text-gray-500 text-sm">
+        <div className="flex items-center justify-between mt-2">
+          <span className="text-sm text-gray-500">
             {moment().format("h:mm")} 기준
           </span>
           <RefreshIcon
-            className="w-5 h-5 ml-4 cursor-pointer"
+            className="w-5 h-5 cursor-pointer"
             onClick={() => refetchAcctoArvlPrearngeInfoList()}
           />
         </div>
       </div>
 
       {arvlPrearngeData && arvlPrearngeData.totalCount === 0 ? (
-        <div className="flex items-center justify-center h-[90vh]">
+        <div className="flex items-center justify-center h-[60vh] md:h-[90vh]">
           <div>도착 예정 버스가 없습니다.</div>
         </div>
       ) : null}
 
+      
       {filterArvlPrearngeData &&
         filterArvlPrearngeData.map((arvlInfo: any) => (
           <BusArrivalInfo arvlInfo={arvlInfo} />
         ))}
+      
+
     </div>
   );
 };

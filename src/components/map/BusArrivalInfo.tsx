@@ -43,7 +43,7 @@ const BusArrivalInfo: React.FC<BusArrivalInfoProps> = ({ arvlInfo }) => {
   }, [arvlInfo]);
 
   return (
-    <div className="flex justify-between ml-5 border-y border-gray-200 py-6 px-6">
+    <div className="flex justify-between px-6 py-6 mx-5 border-b border-gray-200 md:ml-5">
       <div className="flex">
         {/* <img
           src={process.env.PUBLIC_URL + "/bus.png"}
@@ -75,7 +75,7 @@ const BusArrivalInfo: React.FC<BusArrivalInfoProps> = ({ arvlInfo }) => {
         </div>
       </div>
 
-      {/* <div className="text-gray-400 text-xs">군자역 성수역</div> */}
+      {/* <div className="text-xs text-gray-400">군자역 성수역</div> */}
     </div>
   );
 };

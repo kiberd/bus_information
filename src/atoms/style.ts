@@ -1,10 +1,13 @@
 import { atom } from "recoil";
 
 const headerMenuState = atom({
-	key: "headerMenuState",
-	default: true,
+  key: "headerMenuState",
+  default: true,
 });
 
-export {
-	headerMenuState,
-};
+const busInfoModalState = atom({
+  key: "busInfoModalState",
+  default: false,
+});
+
+export { headerMenuState, busInfoModalState };
