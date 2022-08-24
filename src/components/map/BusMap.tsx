@@ -92,7 +92,7 @@ const BusMap = () => {
 
           // setTargetBusData({ ...targetBusData, isList: true});
         }}
-        onDragStart={(map) => setSttnList([])}
+        // onDragStart={(map) => setSttnList([])}
         onZoomChanged={(map) => {
           // setMarker({ ...marker, level: map.getLevel() });
           // setTargetBusData({ ...targetBusData, isList: true});
@@ -137,7 +137,7 @@ const BusMap = () => {
                   className="w-4 h-4"
                 />
 
-                <div className="text-xs text-ellipsis overflow-hidden">
+                <div className="overflow-hidden text-xs text-ellipsis">
                   {sttn.nodenm}
                 </div>
               </div>
@@ -145,7 +145,7 @@ const BusMap = () => {
           ))}
       </Map>
 
-      <div className="fixed top-24 z-10 left-5 bg-slate-100 border rounded-md p-3 text-sm">검색하시려면 가운데 마커를 클릭 해주세요. (반경 500m 검색)</div>
+      <div className="fixed z-10 p-3 text-sm border rounded-md top-24 left-5 bg-slate-100">검색하시려면 가운데 마커를 클릭 해주세요. (반경 500m 검색)</div>
     </div>
   );
 };
