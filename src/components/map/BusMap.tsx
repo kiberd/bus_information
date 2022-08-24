@@ -3,7 +3,7 @@ import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 
 import { useQuery } from "react-query";
 
-import { getCrdntPrxmtSttnList } from "../../api/api";
+import { getCrdntPrxmtSttnList, getCtyCodeList } from "../../api/api";
 
 import { useRecoilState } from "recoil";
 import { targetBusDataState } from "../../atoms/data";
@@ -41,6 +41,21 @@ const BusMap = () => {
       enabled: false,
     }
   );
+
+  // const {
+  //   data: listData,
+    
+  // } = useQuery(
+  //   "getCtyCodeList",
+  //   () => getCtyCodeList(),
+  //   {
+  //     enabled: true,
+  //   }
+  // );
+
+  // useEffect(() => {
+  //   console.log(listData);
+  // } ,[listData])
 
   // useEffect(() => {
   //   setMarker({

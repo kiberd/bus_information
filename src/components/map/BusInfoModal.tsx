@@ -61,7 +61,7 @@ const BusInfoModal: React.FC<BusInfoModalProps> = () => {
                     </XIcon>
                   </div>
 
-                  <div className="h-[80vh] overscroll-contain">
+                  <div className="h-[80vh] overflow-auto overscroll-contain">
 
 				  <BusDetailInfo />
 
