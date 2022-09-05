@@ -5,17 +5,6 @@ interface BusArrivalInfoProps {
   arvlInfo: BusArrivalInfoType;
 }
 
-// interface BusArrivalInfoType {
-//   arrprevstationcnt: number;
-//   arrtime: number;
-//   nodeid: string;
-//   nodenm: string;
-//   routeid: string;
-//   routeno: number;
-//   routetp: string;
-//   vehicletp: string;
-// }
-
 const BusArrivalInfo: React.FC<BusArrivalInfoProps> = ({ arvlInfo }) => {
 
   const [busColor, setBusColor] = useState<string>();

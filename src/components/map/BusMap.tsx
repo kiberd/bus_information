@@ -3,7 +3,11 @@ import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 
 import { useQuery } from "react-query";
 
-import { getCrdntPrxmtSttnList, getCtyCodeList } from "../../api/api";
+import {
+  getCrdntPrxmtSttnList,
+  getCtyCodeList,
+  getAddressByQuery,
+} from "../../api/api";
 
 import { useRecoilState } from "recoil";
 import { targetBusDataState } from "../../atoms/data";
@@ -42,28 +46,17 @@ const BusMap = () => {
     }
   );
 
-  // const {
-  //   data: listData,
-    
-  // } = useQuery(
-  //   "getCtyCodeList",
-  //   () => getCtyCodeList(),
-  //   {
-  //     enabled: true,
-  //   }
-  // );
+  const { data: addressData } = useQuery(
+    "getAddressByQuery",
+    () => getAddressByQuery(""),
+    {
+      enabled: true,
+    }
+  );
 
-  // useEffect(() => {
-  //   console.log(listData);
-  // } ,[listData])
-
-  // useEffect(() => {
-  //   setMarker({
-  //     level: 3,
-  //     lat: 37.67076,
-  //     lng: 126.760211,
-  //   });
-  // }, []);
+  useEffect(() => {
+    console.log(addressData);
+  }, [addressData]);
 
   useEffect(() => {
     if (marker && !isSttnFetching) {
@@ -84,7 +77,6 @@ const BusMap = () => {
   };
 
   useEffect(() => {
-    
     if (sttnData) {
       let targetSttnList: any;
       if (sttnData.items === "") {
@@ -144,13 +136,9 @@ const BusMap = () => {
             lat: map.getCenter().getLat(),
             lng: map.getCenter().getLng(),
           });
-
-          // setTargetBusData({ ...targetBusData, isList: true});
         }}
-        // onDragStart={(map) => setSttnList([])}
+        
         onZoomChanged={(map) => {
-          // setMarker({ ...marker, level: map.getLevel() });
-          // setTargetBusData({ ...targetBusData, isList: true});
           setLevel(map.getLevel());
         }}
         ref={mapRef}
@@ -207,12 +195,26 @@ const BusMap = () => {
 
       {isBusInfoModalOpen ? <BusInfoModal /> : null}
 
-      <div className="fixed z-10 p-3 text-xs border rounded-md md:text-sm top-20 left-7 md:top-24 md:left-5 bg-slate-100">
+      {/* Mobile */}
+      <div className="md:hidden fixed top-[85px] left-0 right-0 my-0 mx-[5vw] z-10 p-3 text-xs border rounded-md bg-slate-100 text-center">
         검색하시려면 가운데 마커를 클릭 해주세요. (반경 500m 검색)
       </div>
+
+      {/* PC */}
+      <div className="hidden md:block fixed top-[85px] left-[20px] z-10 p-3 text-xs border rounded-md bg-slate-100 text-center">
+        검색하시려면 가운데 마커를 클릭 해주세요. (반경 500m 검색)
+      </div>
+
       <div
         onClick={handleCurrentLocationClick}
-        className="fixed z-10 p-3 text-xs border rounded-md md:text-sm top-[90vh] left-[83vw] md:left-[65vw] bg-slate-100 cursor-pointer"
+        className="hidden md:block fixed z-10 p-3 text-xs border rounded-md md:text-sm bottom-[3vh] left-[65vw] bg-slate-100 cursor-pointer"
+      >
+        <GlobeAltIcon className="w-5 h-5" />
+      </div>
+
+      <div
+        onClick={handleCurrentLocationClick}
+        className="md:hidden fixed z-10 p-3 text-xs border rounded-md md:text-sm bottom-[3vh] right-[4vw] bg-slate-100 cursor-pointer"
       >
         <GlobeAltIcon className="w-5 h-5" />
       </div>

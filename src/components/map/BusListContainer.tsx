@@ -12,7 +12,8 @@ const BusListContainer = () => {
 
   if (!targetBusData.isSttnFetching && targetBusData.sttnList.length === 0)
     return (
-      <div className="items-center justify-center hidden ml-40 md:flex">
+      
+      <div className="w-[30%] items-center justify-center hidden md:flex">
         <div>버스 정류장 정보가 없습니다.</div>
       </div>
     );
@@ -44,13 +45,9 @@ const BusListContainer = () => {
           </div>
         )
       ) : (
-        <div>
-          {/* <ArrowLeftIcon
-            className="w-5 h-5 mt-4 mb-4 ml-4 cursor-pointer"
-            onClick={() => setTargetBusData({ ...targetBusData, isList: true })}
-          /> */}
+        <>
           <BusDetailInfo />
-        </div>
+        </>
       )}
     </div>
   );
