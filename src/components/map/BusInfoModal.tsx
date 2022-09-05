@@ -3,20 +3,17 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
 import BusDetailInfo from "./BusDetailInfo";
-import BusStationInfo from "./BusStationInfo";
-import { ArrowLeftIcon } from "@heroicons/react/outline";
 
 import { useRecoilState } from "recoil";
-import { busInfoModalState } from "../../atoms/style";
 import { targetBusDataState } from "../../atoms/data";
 import { XIcon } from "@heroicons/react/solid";
 
-interface BusInfoModalProps {}
+interface BusInfoModalProps {
+  isBusInfoModalOpen: boolean;
+  onHandleBusInfoModal: any;
+}
 
-const BusInfoModal: React.FC<BusInfoModalProps> = () => {
-  const [targetBusData, setTargetBusData] = useRecoilState(targetBusDataState);
-  const [isBusInfoModalOpen, setIsBusInfoModalOpen] =
-    useRecoilState(busInfoModalState);
+const BusInfoModal: React.FC<BusInfoModalProps> = ({ isBusInfoModalOpen, onHandleBusInfoModal }) => {
 
   return (
     <>
@@ -24,7 +21,7 @@ const BusInfoModal: React.FC<BusInfoModalProps> = () => {
         <Dialog
           as="div"
           className="relative z-10 md:hidden"
-          onClose={() => setIsBusInfoModalOpen(false)}
+          onClose={() => onHandleBusInfoModal(false)}
         >
           <Transition.Child
             as={Fragment}
@@ -55,7 +52,7 @@ const BusInfoModal: React.FC<BusInfoModalProps> = () => {
                       className="cursor-pointer"
                       width={15}
                       height={15}
-                      onClick={() => setIsBusInfoModalOpen(false)}
+                      onClick={() => onHandleBusInfoModal(false)}
                     >
                       close
                     </XIcon>
@@ -63,7 +60,7 @@ const BusInfoModal: React.FC<BusInfoModalProps> = () => {
 
                   <div className="h-[80vh] overflow-auto overscroll-contain">
 
-				  <BusDetailInfo />
+				            <BusDetailInfo />
 
                   </div>
                 </Dialog.Panel>

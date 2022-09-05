@@ -9,6 +9,7 @@ export interface TargetBusDataTypes {
     cityCode: number;
   }
 
+
 const targetBusDataState = atom<TargetBusDataTypes>({
 	key: "targetBusDataState",
 	default: {
@@ -21,6 +22,15 @@ const targetBusDataState = atom<TargetBusDataTypes>({
     },
 });
 
+const centerCoordinateState = atom({
+  key: "centerCoordinateState",
+  default: {
+    x: "",
+    y: ""
+  }
+})
+
 export {
 	targetBusDataState,
+  centerCoordinateState,
 };

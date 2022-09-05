@@ -43,6 +43,7 @@ const BusDetailInfo = () => {
 
   useEffect(() => {
     if (arvlPrearngeData) {
+
       const initArry: BusArrivalInfoType[] = [];
 
       const filterArvlPrearngeData: BusArrivalInfoType[] =
@@ -106,8 +107,8 @@ const BusDetailInfo = () => {
 
       
       {filterArvlPrearngeData &&
-        filterArvlPrearngeData.map((arvlInfo: any) => (
-          <BusArrivalInfo arvlInfo={arvlInfo} />
+        filterArvlPrearngeData.map((arvlInfo: any, index: any) => (
+          <BusArrivalInfo key={arvlInfo.nodeid + index} arvlInfo={arvlInfo} />
         ))}
       
 

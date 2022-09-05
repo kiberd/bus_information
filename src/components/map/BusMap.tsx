@@ -10,18 +10,20 @@ import {
 } from "../../api/api";
 
 import { useRecoilState } from "recoil";
-import { targetBusDataState } from "../../atoms/data";
+import { targetBusDataState, centerCoordinateState } from "../../atoms/data";
 
 import BusInfoModal from "./BusInfoModal";
 
 import { GlobeAltIcon } from "@heroicons/react/solid";
 
-import { busInfoModalState } from "../../atoms/style";
-
 const BusMap = () => {
   const [targetBusData, setTargetBusData] = useRecoilState(targetBusDataState);
-  const [isBusInfoModalOpen, setIsBusInfoModalOpen] =
-    useRecoilState(busInfoModalState);
+  const [isBusInfoModalOpen, setIsBusInfoModalOpen] = useState<boolean>(false);
+  const [centerCoordinate, setCenterCoordinate] = useRecoilState(centerCoordinateState);
+
+  useEffect(() => {
+    if (centerCoordinate.x !== "" && centerCoordinate.y !== "") setMarker({ ...marker, lat: centerCoordinate.y, lng: centerCoordinate.x });
+  }, [centerCoordinate])
 
   const mapRef: any = useRef();
   const [level, setLevel] = useState<any>(3);
@@ -45,25 +47,6 @@ const BusMap = () => {
       enabled: false,
     }
   );
-
-  const { data: addressData } = useQuery(
-    "getAddressByQuery",
-    () => getAddressByQuery(""),
-    {
-      enabled: true,
-    }
-  );
-
-  useEffect(() => {
-    console.log(addressData);
-  }, [addressData]);
-
-  useEffect(() => {
-    if (marker && !isSttnFetching) {
-      // refetchCrdntPrxmtSttnList();
-      // setTargetBusData({...targetBusData, isSttnFetching: true});
-    }
-  }, [marker]);
 
   const handleMarkerClick = () => {
     if (marker && !isSttnFetching) {
@@ -106,8 +89,7 @@ const BusMap = () => {
       nodeNm: nodeNm,
       cityCode: cityCode,
     });
-
-    setIsBusInfoModalOpen(true);
+    handleBusInfoModal(true);
   };
 
   const handleCurrentLocationClick = () => {
@@ -124,6 +106,10 @@ const BusMap = () => {
     }
   };
 
+  const handleBusInfoModal = (open: boolean) => {
+    setIsBusInfoModalOpen(open);
+  };
+
   return (
     <div>
       <Map
@@ -137,7 +123,6 @@ const BusMap = () => {
             lng: map.getCenter().getLng(),
           });
         }}
-        
         onZoomChanged={(map) => {
           setLevel(map.getLevel());
         }}
@@ -193,15 +178,20 @@ const BusMap = () => {
           ))}
       </Map>
 
-      {isBusInfoModalOpen ? <BusInfoModal /> : null}
+      {isBusInfoModalOpen ? (
+        <BusInfoModal
+          isBusInfoModalOpen={isBusInfoModalOpen}
+          onHandleBusInfoModal={handleBusInfoModal}
+        />
+      ) : null}
 
       {/* Mobile */}
-      <div className="md:hidden fixed top-[85px] left-0 right-0 my-0 mx-[5vw] z-10 p-3 text-xs border rounded-md bg-slate-100 text-center">
+      <div className="md:hidden fixed top-[85px] left-0 right-0 my-0 mx-[5vw] z-[5] p-3 text-xs border rounded-md bg-slate-100 text-center">
         검색하시려면 가운데 마커를 클릭 해주세요. (반경 500m 검색)
       </div>
 
       {/* PC */}
-      <div className="hidden md:block fixed top-[85px] left-[20px] z-10 p-3 text-xs border rounded-md bg-slate-100 text-center">
+      <div className="hidden md:block fixed top-[85px] left-[20px] z-[5] p-3 text-xs border rounded-md bg-slate-100 text-center">
         검색하시려면 가운데 마커를 클릭 해주세요. (반경 500m 검색)
       </div>
 

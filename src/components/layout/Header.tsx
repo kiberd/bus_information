@@ -1,38 +1,92 @@
 import React, { useEffect, useState } from "react";
 import { CubeTransparentIcon } from "@heroicons/react/outline";
-import { Link } from "react-router-dom";
 
-import { headerMenuState } from "../../atoms/style";
-import { useRecoilState } from "recoil";
+import useQueryDebounce from "../../hooks/useQueryDebounce";
+import useSearch from "../../hooks/useSearch";
+import { XIcon } from "@heroicons/react/solid";
+
+import AddressList from "../list/ AddressList";
 
 const Header = () => {
+  const [address, setAddress] = useState<any>();
+  const [isVisible, setIsVisible] = useState<boolean>();
 
-  const [isMap, setIsMap] = useRecoilState(headerMenuState);
- 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAddress(e.target.value);
+  };
+
+  const debouncedSearchInput = useQueryDebounce(address, 500);
+
+  const { data, isLoading, isFetching, isError } =
+    useSearch(debouncedSearchInput);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, [data]);
+
   return (
-    <div className="fixed left-0 top-0 w-full h-[70px] bg-gray-200 flex">
-      <div className="flex items-center w-[70%] h-full">
-        <div className="ml-5 flex">
-          <CubeTransparentIcon className="w-6 h-6" />
-          <h3 className="ml-5">Bus Information</h3>
+    <div className="fixed left-0 top-0 w-full h-[70px] bg-gray-200 z-10">
+      <div className="flex w-full h-full">
+        <div className="w-[55%] flex justify-center md:justify-start items-center">
+          <CubeTransparentIcon className="w-4 h-5 ml-4" />
+          <h2 className="ml-2">Bus Information</h2>
+
+          {/* PC용 input */}
+          <div className="relative flex-col hidden ml-10 md:block">
+            <label className="ml-1 text-xs">주소를 입력하세요</label>
+
+            <div className="flex">
+              <input
+                className="px-1 border border-gray-500 rounded-md"
+                onChange={handleInputChange}
+              />
+            </div>
+
+            {/* 검색 결과 */}
+            {isVisible && data && data.length > 0 ? (
+              <div className="absolute z-[20] bg-white border border-gray-500 rounded-md mt-2">
+                <XIcon
+                  className="mt-2 ml-2 cursor-pointer"
+                  width={15}
+                  height={15}
+                  onClick={() => setIsVisible(false)}
+                >
+                  close
+                </XIcon>
+                <AddressList data={data} />
+              </div>
+            ) : null}
+          </div>
         </div>
 
-        {/* <nav>
-          <ul className="flex ml-6">
-            <li className={ isMap ? `ml-6 transition duration-700 border-b border-gray-700 text-black` : `ml-6`} onClick={() => setIsMap(true)}>
-              <Link to={"/"}>지도로 보기</Link>
-            </li>
-            <li className={ isMap ? `ml-6` : `border-b border-gray-700 text-black ml-6`} onClick={() => setIsMap(false)}>
-              <Link to={"/list"}>목록으로 보기</Link>
-            </li>
-          </ul>
-        </nav> */}
+        <div className="w-[45%] flex justify-center items-center">
+          {/* Mobile용 input */}
+          <div className="flex-col w-full md:hidden">
+            <label className="ml-1 text-xs">주소를 입력하세요</label>
+            <div className="flex">
+              <input
+                className="w-full mr-2 border border-gray-500 rounded-md"
+                onChange={handleInputChange}
+              />
+            </div>
 
+            {/* 검색 결과 */}
+            {isVisible && data && data.length > 0 ? (
+              <div className="absolute z-[20] bg-white border border-gray-500 rounded-md mt-2 left-0 right-0 my-0 mx-[20px]">
+                <XIcon
+                  className="mt-2 ml-2 cursor-pointer"
+                  width={15}
+                  height={15}
+                  onClick={() => setIsVisible(false)}
+                >
+                  close
+                </XIcon>
+                <AddressList data={data} />
+              </div>
+            ) : null}
+          </div>
+        </div>
       </div>
-
-      {/* <div className="flex items-center justify-center w-[30%] h-full bg-green-400">
-        Menu
-      </div> */}
     </div>
   );
 };
